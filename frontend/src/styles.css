@@ -1,0 +1,21 @@
+body {
+    padding: 20px;
+}
+
+.navbar {
+    margin-bottom: 20px;
+}
+
+.hero {
+    background-color: #f5f5f5;
+    padding: 2rem 1rem;
+}
+
+.hero .title {
+    color: #333;
+}
+
+.chart-container {
+    max-height: 80%;
+    overflow: hidden;
+}
