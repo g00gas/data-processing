@@ -1,0 +1,35 @@
+version: '3.7'
+
+services:
+  elasticsearch:
+    image: docker.elastic.co/elasticsearch/elasticsearch:7.17.9
+    container_name: elasticsearch
+    environment:
+      - discovery.type=single-node
+      - cluster.name=docker-cluster
+      - bootstrap.memory_lock=true
+      - "ES_JAVA_OPTS=-Xms512m -Xmx512m"
+    ulimits:
+      memlock:
+        soft: -1
+        hard: -1
+    volumes:
+      - esdata:/usr/share/elasticsearch/data
+    ports:
+      - "9200:9200"
+
+  filebeat:
+    image: docker.elastic.co/beats/filebeat:8.14.1 
+    container_name: filebeat
+    user: root
+    volumes:
+      - ./filebeat.yml:/usr/share/filebeat/filebeat.yml:ro
+      - ./apache.log:/usr/share/filebeat/logs/apache.log:ro
+      - ./modules.d/:/usr/share/filebeat/modules.d/
+    depends_on:
+      - elasticsearch
+
+volumes:
+  esdata:
+    driver: local
+

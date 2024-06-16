@@ -1,0 +1,35 @@
+filebeat.config.modules:
+  path: ${path.config}/modules.d/*.yml
+  reload.enabled: false
+
+filebeat.inputs:
+- type: log
+  enabled: true
+  paths:
+    - /usr/share/filebeat/logs/apache.log
+  fields:
+    log_type: filestream
+
+filebeat.modules:
+- module: apache
+  error:
+          enabled: false
+  access:
+    enabled: true
+    var.paths: ["/usr/share/filebeat/logs/apache.log"]
+
+setup.template.name: "apache_logs"
+setup.template.pattern: "apache_logs"
+setup.template.settings:
+  index.number_of_shards: 1
+  index.codec: best_compression
+setup.ilm.enabled: false
+setup.template.overwrite: true
+setup.template.enabled: false
+
+output.elasticsearch:
+  hosts: ["http://elasticsearch:9200"]
+  index: "apache_logs"
+  username: "elastic"
+  password: "password"
+
